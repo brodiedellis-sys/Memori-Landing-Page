@@ -66,7 +66,7 @@ memori-landing/
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/brodiedellis-sys/Memori-Landing-Page.git
    cd memori-landing
    ```
 
@@ -237,7 +237,7 @@ Use these CSS classes for consistent styling:
 
 For questions about this landing site or Memori itself:
 - Email: contact@memori.dev
-- GitHub: [Repository Issues](link-to-issues)
+- GitHub: [Repository Issues](https://github.com/brodiedellis-sys/Memori-Landing-Page/issues)
 
 ## 📄 License
 
