@@ -7,7 +7,7 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
           {/* Terminal-style copyright */}
           <div className="text-gray/70 text-lg">
-            <span className="text-mint">></span> memori © 2025
+            <span className="text-mint">{'>'}</span> memori © 2025
           </div>
 
           {/* Navigation Links */}

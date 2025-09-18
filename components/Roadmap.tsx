@@ -102,7 +102,7 @@ export default function Roadmap() {
         <div className="text-center mt-16">
           <div className="inline-block bg-dark border border-gray p-6 crt-glow">
             <div className="text-gray mb-2">
-              <span className="text-mint">></span> Want to influence our roadmap?
+              <span className="text-mint">{'>'}</span> Want to influence our roadmap?
             </div>
             <div className="text-gray/70">
               Join our community and share your ideas for the future of Memori.
