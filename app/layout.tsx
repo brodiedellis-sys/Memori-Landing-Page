@@ -9,8 +9,8 @@ const vt323 = VT323({
 });
 
 export const metadata: Metadata = {
-  title: "Memori — Your pixelated AI journaling companion",
-  description: "A local-first journaling partner that remembers, reflects, and grows with you.",
+  title: "Memori",
+  description: "Capture who you are, shape who you'll become",
 };
 
 export default function RootLayout({

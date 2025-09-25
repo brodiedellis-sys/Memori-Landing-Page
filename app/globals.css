@@ -73,11 +73,24 @@
     @apply border-border;
   }
   body {
-    @apply bg-dark text-gray font-vt323;
+    @apply bg-darkSepia text-cream font-vt323;
+    /* Sepia starfield background */
+    background-image: url('/background.png');
+    background-repeat: repeat;
+    background-size: cover;
+    background-attachment: fixed;
   }
   html {
     @apply dark;
   }
+}
+
+@keyframes blink-cursor {
+  0%, 50% { opacity: 1; }
+  60%, 100% { opacity: 0; }
+}
+.animate-blink-cursor {
+  animation: blink-cursor 1s steps(1) infinite;
 }
 
 /* Custom pixelated styles */
@@ -109,12 +122,109 @@
   image-rendering: crisp-edges;
 }
 
-/* Retro animations */
-@keyframes flicker {
-  0%, 100% { opacity: 1; }
+/* Sepia theme styles */
+.text-glow {
+  text-shadow: 0 0 4px #f5c16c, 0 0 8px #f5c16c66;
+}
+
+.golden-glow {
+  box-shadow: 0 0 8px #f5c16c;
+  transition: all 0.3s ease;
+}
+
+.golden-glow:hover {
+  box-shadow: 0 0 12px #f5c16c, 0 0 20px #f5c16c66;
+  transform: translateY(-1px);
+}
+
+/* Pixel sparkle animations */
+@keyframes sparkle {
+  0%, 100% { opacity: 0.3; }
   50% { opacity: 0.8; }
 }
 
-.flicker {
-  animation: flicker 2s infinite;
+@keyframes sparkle-delayed {
+  0%, 100% { opacity: 0.2; }
+  25% { opacity: 0.6; }
+  75% { opacity: 0.4; }
+}
+
+.pixel-sparkle {
+  animation: sparkle 3s ease-in-out infinite;
+}
+
+.pixel-sparkle-delayed {
+  animation: sparkle-delayed 4s ease-in-out infinite;
+}
+
+/* Sepia button styles */
+.sepia-btn {
+  @apply bg-deepAmber text-darkSepia border border-gold px-4 py-2 font-vt323;
+  transition: all 0.3s ease;
+}
+
+.sepia-btn:hover {
+  @apply shadow-[0_0_8px_#f5c16c];
+  text-shadow: 0 0 4px #2b1f14;
+}
+
+/* Sepia card styles */
+.sepia-card {
+  @apply bg-warmBrown border border-gold rounded-sm;
+  backdrop-filter: blur(1px);
+}
+
+/* Sepia nav styles */
+.sepia-nav {
+  @apply border border-gold;
+  background: rgba(43, 31, 20, 0.8);
+  backdrop-filter: blur(2px);
+}
+
+/* Starfield background layer */
+.starfield-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: #0D0D0D;
+  background-image: url('/background.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+  z-index: -1;
+  pointer-events: none;
+  /* Subtle background animations */
+  animation: subtle-drift 180s ease-in-out infinite, star-twinkle 4s ease-in-out infinite;
+}
+
+/* Subtle cloud drift animation */
+@keyframes subtle-drift {
+  0%, 100% {
+    background-position: center center;
+  }
+  50% {
+    background-position: calc(50% + 20px) calc(50% + 10px);
+  }
+}
+
+/* Star twinkling effect */
+@keyframes star-twinkle {
+  0%, 100% {
+    opacity: 1;
+    filter: brightness(1);
+  }
+  25% {
+    opacity: 0.8;
+    filter: brightness(1.1);
+  }
+  50% {
+    opacity: 0.9;
+    filter: brightness(0.9);
+  }
+  75% {
+    opacity: 0.95;
+    filter: brightness(1.05);
+  }
 }

@@ -9,18 +9,21 @@ const blogPosts = [
     excerpt: "Exploring the philosophy behind keeping your digital thoughts truly private and secure on your own device.",
     date: "2025-01-15",
     readTime: "5 min read",
+    slug: "local-first",
   },
   {
-    title: "The Art of Pixelated Design in Modern Apps",
-    excerpt: "How retro aesthetics create focus and nostalgia in an age of overwhelming digital interfaces.",
+    title: "Why Pixels?",
+    excerpt: "In a world of infinite gradients, smooth animations, and hyper-realistic interfaces, why choose pixels? The answer isn't nostalgia — it's focus.",
     date: "2025-01-10", 
     readTime: "3 min read",
+    slug: "why-pixels",
   },
   {
     title: "AI Journaling: Reflection Without Surveillance",
-    excerpt: "Designing AI companions that help you grow while respecting your privacy and autonomy.",
+    excerpt: "The promise of AI-assisted journaling is profound: imagine a companion that remembers your patterns, celebrates your growth, and offers insights tailored to your journey.",
     date: "2025-01-05",
     readTime: "7 min read",
+    slug: "ai-journaling",
   },
 ];
 
@@ -32,52 +35,48 @@ export default function BlogPage() {
       <div className="container mx-auto px-4 py-16">
         {/* Header */}
         <div className="text-center mb-16">
-          <h1 className="text-6xl font-bold text-blue mb-4">MEMORI BLOG</h1>
+          <h1 className="text-6xl font-bold text-gold mb-4">MEMORI BLOG</h1>
           <p className="text-xl text-gray max-w-2xl mx-auto">
             Thoughts on privacy, design, and the future of digital journaling
           </p>
         </div>
 
         {/* Blog Posts Grid */}
-        <div className="grid gap-8 md:gap-12 max-w-4xl mx-auto">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 mb-16">
           {blogPosts.map((post, index) => (
-            <Card key={index} className="bg-dark border-gray p-8 crt-glow hover:border-mint transition-all">
-              <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-4">
-                <div className="flex-1">
-                  <h2 className="text-3xl text-mint mb-3 hover:text-blue cursor-pointer transition-colors">
-                    {post.title}
-                  </h2>
-                  <p className="text-lg text-gray mb-4 leading-relaxed">
-                    {post.excerpt}
-                  </p>
-                </div>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-                <div className="flex gap-4 text-sm text-gray/70">
+            <Card 
+              key={index}
+              className="bg-darkSepia border border-cream p-6 font-vt323 hover:border-mint transition-colors cursor-pointer"
+              style={{ borderRadius: '0', borderStyle: 'dashed' }}
+            >
+              <a href={`/blog/${post.slug}`} className="block">
+                <div className="flex items-center gap-2 text-gray/70 text-sm mb-4">
                   <span>{post.date}</span>
                   <span>•</span>
                   <span>{post.readTime}</span>
                 </div>
-                <Button 
-                  variant="outline" 
-                  className="border-gray text-gray hover:bg-gray hover:text-dark font-vt323 text-sm self-start sm:self-center"
-                >
-                  READ MORE →
-                </Button>
-              </div>
+                
+                <h2 className="text-xl font-bold text-mint mb-4 hover:text-gold transition-colors">
+                  {post.title}
+                </h2>
+                
+                <p className="text-gray leading-relaxed mb-4">
+                  {post.excerpt}
+                </p>
+                
+                <div className="text-mint hover:text-gold transition-colors text-sm">
+                  Read more →
+                </div>
+              </a>
             </Card>
           ))}
         </div>
 
         {/* Coming Soon Notice */}
-        <Card className="bg-dark border-pink p-8 text-center mt-16 max-w-2xl mx-auto crt-glow">
-          <h2 className="text-3xl text-pink mb-4">MORE POSTS COMING SOON</h2>
+        <Card className="bg-dark border border-pink p-8 text-center mt-16 max-w-2xl mx-auto">
+          <h2 className="text-2xl text-pink mb-4">MORE POSTS COMING SOON</h2>
           <p className="text-lg text-gray mb-6">
             We're preparing more insights about building privacy-focused tools and retro design patterns.
-          </p>
-          <p className="text-sm text-gray/70">
-            This blog is ready for future MDX integration and dynamic content loading.
           </p>
         </Card>
       </div>

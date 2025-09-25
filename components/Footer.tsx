@@ -7,34 +7,18 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
           {/* Terminal-style copyright */}
           <div className="text-gray/70 text-lg">
-            <span className="text-mint">{'>'}</span> memori © 2025
+            <span className="text-mint">{'>'}</span> Memori © 2025
           </div>
 
-          {/* Navigation Links */}
-          <div className="flex items-center space-x-6">
-            <Link 
-              href="/about" 
-              className="text-gray hover:text-mint transition-colors text-lg"
-            >
-              ABOUT
-            </Link>
-            <Link 
-              href="/blog" 
-              className="text-gray hover:text-mint transition-colors text-lg"
-            >
-              BLOG
-            </Link>
+          {/* Contact Link */}
+          <div className="flex items-center">
             <a 
-              href="#" 
-              className="text-gray hover:text-blue transition-colors text-lg"
+              href="https://discord.gg/zPGGFPXfty" 
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray hover:text-blurple transition-colors text-lg"
             >
-              GITHUB
-            </a>
-            <a 
-              href="mailto:contact@memori.dev" 
-              className="text-gray hover:text-pink transition-colors text-lg"
-            >
-              CONTACT
+              Contact
             </a>
           </div>
 

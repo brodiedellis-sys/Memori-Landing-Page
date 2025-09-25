@@ -32,7 +32,7 @@ const roadmapItems = [
 
 export default function Roadmap() {
   return (
-    <section className="py-20 bg-dark font-vt323">
+    <section className="py-20 bg-dark/80 font-vt323">
       <div className="container mx-auto px-4">
         {/* Section header */}
         <div className="text-center mb-16">
