@@ -37,12 +37,12 @@ export async function POST(request: NextRequest) {
     
     const subscriberEmails = waitlistEmails?.map(entry => entry.email) || [];
     
-    // If no subscribers yet, send to admin for testing
+    // Send to all actual subscribers (works once domain is verified)
     const emailsToSend = subscriberEmails.length > 0 ? subscriberEmails : ['contactmemoridev@gmail.com'];
 
     try {
       await resend.emails.send({
-        from: 'Memori Updates <noreply@resend.dev>',
+        from: 'Memori Updates <noreply@updates.memori.com>',
         to: emailsToSend,
         subject: subject || 'Memori Update',
         html: `
