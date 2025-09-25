@@ -26,7 +26,7 @@ async function getWaitlistData() {
 }
 
 async function addToWaitlist(email: string, ip: string) {
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from('waitlist')
     .insert([
       {
@@ -34,8 +34,7 @@ async function addToWaitlist(email: string, ip: string) {
         ip_address: ip,
         created_at: new Date().toISOString(),
       }
-    ])
-    .select();
+    ]);
 
   if (error) {
     throw error;
@@ -174,7 +173,7 @@ export async function GET() {
     const data = await getWaitlistData();
     return NextResponse.json({
       count: data.count,
-      totalEmails: (data.emails as any[]).length
+      totalEmails: Array.isArray(data.emails) ? data.emails.length : 0
     });
   } catch {
     return NextResponse.json(
