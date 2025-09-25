@@ -102,6 +102,14 @@
     inset 0 0 0 1px rgba(226, 232, 240, 0.1);
 }
 
+.pixel-border-thin {
+  border: 1px solid;
+  border-radius: 0;
+  box-shadow: 
+    0 0 0 1px rgba(154, 230, 180, 0.3),
+    inset 0 0 0 1px rgba(154, 230, 180, 0.1);
+}
+
 .crt-glow {
   transition: all 0.3s ease;
 }

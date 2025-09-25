@@ -62,9 +62,9 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Menu Button */}
-          <button className="md:hidden text-cream hover:text-gold text-2xl">
+          <Link href="/nav" className="md:hidden text-cream hover:text-gold text-2xl">
             ☰
-          </button>
+          </Link>
         </div>
       </div>
     </nav>
