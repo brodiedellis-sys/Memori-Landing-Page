@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { VT323 } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 const vt323 = VT323({
@@ -24,6 +25,7 @@ export default function RootLayout({
         className={`${vt323.variable} font-mono antialiased`}
       >
         {children}
+        <Analytics />
       </body>
     </html>
   );
