@@ -1,11 +1,32 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
+import { kv } from '@vercel/kv';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Simple in-memory storage for demo (will also email you each signup)
-const emailStore: { email: string; timestamp: string; ip?: string }[] = [];
-let currentCount = 42;
+// Helper functions for KV storage
+async function getWaitlistData() {
+  const emails = await kv.get('waitlist_emails') || [];
+  const count = await kv.get('waitlist_count') || 42;
+  return { emails, count };
+}
+
+async function addToWaitlist(email: string, ip: string) {
+  const data = await getWaitlistData();
+  const newEntry = {
+    email,
+    timestamp: new Date().toISOString(),
+    ip
+  };
+  
+  const updatedEmails = [...(data.emails as any[]), newEntry];
+  const newCount = (data.count as number) + 1;
+  
+  await kv.set('waitlist_emails', updatedEmails);
+  await kv.set('waitlist_count', newCount);
+  
+  return { newEntry, newCount, totalEmails: updatedEmails.length };
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -20,7 +41,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if email already exists
-    const emailExists = emailStore.some((entry) => entry.email === email);
+    const data = await getWaitlistData();
+    const emailExists = (data.emails as any[]).some((entry: any) => entry.email === email);
     if (emailExists) {
       return NextResponse.json(
         { error: 'Email already registered' },
@@ -28,18 +50,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Add new email to in-memory store
-    const newEntry = {
-      email,
-      timestamp: new Date().toISOString(),
-      ip: request.headers.get('x-forwarded-for') || 'unknown'
-    };
-
-    emailStore.push(newEntry);
-    currentCount += 1;
+    // Add new email to KV storage
+    const result = await addToWaitlist(email, request.headers.get('x-forwarded-for') || 'unknown');
 
     // Log for demo purposes (you can see this in Vercel function logs)
-    console.log(`New waitlist signup: ${email} (Total: ${currentCount})`);
+    console.log(`New waitlist signup: ${email} (Total: ${result.newCount})`);
 
     // Send welcome email to new subscriber
     try {
@@ -59,7 +74,7 @@ export async function POST(request: NextRequest) {
               
               <p>Hey there, future Memori user!</p>
               
-              <p>You're now supporter <strong style="color: #9AE6B4;">#${currentCount}</strong> on our waitlist. Thank you for believing in local-first, privacy-focused journaling!</p>
+              <p>You're now supporter <strong style="color: #9AE6B4;">#${result.newCount}</strong> on our waitlist. Thank you for believing in local-first, privacy-focused journaling!</p>
               
               <p><strong>What's Next?</strong></p>
               <ul style="color: #94A3B8;">
@@ -93,15 +108,15 @@ export async function POST(request: NextRequest) {
       await resend.emails.send({
         from: 'Memori Waitlist <noreply@resend.dev>',
         to: [process.env.FROM_EMAIL || 'contactmemoridev@gmail.com'],
-        subject: `New Memori Waitlist Signup #${currentCount}`,
+        subject: `New Memori Waitlist Signup #${result.newCount}`,
         html: `
           <h2>New Waitlist Signup!</h2>
           <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Supporter Number:</strong> ${currentCount}</p>
-          <p><strong>Timestamp:</strong> ${newEntry.timestamp}</p>
-          <p><strong>IP:</strong> ${newEntry.ip}</p>
+          <p><strong>Supporter Number:</strong> ${result.newCount}</p>
+          <p><strong>Timestamp:</strong> ${result.newEntry.timestamp}</p>
+          <p><strong>IP:</strong> ${result.newEntry.ip}</p>
           <hr>
-          <p>Total waitlist count: ${currentCount}</p>
+          <p>Total waitlist count: ${result.newCount}</p>
         `,
       });
     } catch (emailError) {
@@ -111,8 +126,8 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      supporterNumber: currentCount,
-      totalCount: currentCount
+      supporterNumber: result.newCount,
+      totalCount: result.newCount
     });
 
   } catch (error) {
@@ -126,10 +141,10 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    // Return current count for public access
+    const data = await getWaitlistData();
     return NextResponse.json({
-      count: currentCount,
-      totalEmails: emailStore.length
+      count: data.count,
+      totalEmails: (data.emails as any[]).length
     });
   } catch {
     return NextResponse.json(

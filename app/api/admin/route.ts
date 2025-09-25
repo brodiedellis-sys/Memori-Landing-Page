@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
+import { kv } from '@vercel/kv';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -16,14 +17,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // For now, since we're using in-memory storage, we'll just send to your email
-    // In production, you'd get emails from a database
-    const testEmails = ['contactmemoridev@gmail.com']; // Add your test emails here
+    // Get all emails from KV storage
+    const waitlistEmails = await kv.get('waitlist_emails') || [];
+    const subscriberEmails = (waitlistEmails as any[]).map(entry => entry.email);
+    
+    // If no subscribers yet, send to admin for testing
+    const emailsToSend = subscriberEmails.length > 0 ? subscriberEmails : ['contactmemoridev@gmail.com'];
 
     try {
       await resend.emails.send({
         from: 'Memori Updates <noreply@resend.dev>',
-        to: testEmails,
+        to: emailsToSend,
         subject: subject || 'Memori Update',
         html: `
           <div style="font-family: 'Courier New', monospace; background: #0D0D0D; color: #E2E8F0; padding: 20px;">
@@ -42,7 +46,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({
         success: true,
         message: 'Update sent successfully',
-        sentTo: testEmails.length
+        sentTo: emailsToSend.length,
+        emails: subscriberEmails.length > 0 ? subscriberEmails : ['Testing mode - sent to admin']
       });
     } catch (emailError) {
       console.error('Failed to send update:', emailError);
