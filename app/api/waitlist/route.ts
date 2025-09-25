@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { Resend } from 'resend';
 
-// Simple in-memory storage for demo (replace with database for production)
-// Note: This resets on each deployment - use a proper database for production
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+// Simple in-memory storage for demo (will also email you each signup)
 const emailStore: { email: string; timestamp: string; ip?: string }[] = [];
 let currentCount = 42;
 
@@ -38,6 +40,27 @@ export async function POST(request: NextRequest) {
 
     // Log for demo purposes (you can see this in Vercel function logs)
     console.log(`New waitlist signup: ${email} (Total: ${currentCount})`);
+
+    // Send notification email to you about new signup
+    try {
+      await resend.emails.send({
+        from: 'Memori Waitlist <noreply@resend.dev>',
+        to: [process.env.FROM_EMAIL || 'contactmemoridev@gmail.com'],
+        subject: `New Memori Waitlist Signup #${currentCount}`,
+        html: `
+          <h2>New Waitlist Signup!</h2>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Supporter Number:</strong> ${currentCount}</p>
+          <p><strong>Timestamp:</strong> ${newEntry.timestamp}</p>
+          <p><strong>IP:</strong> ${newEntry.ip}</p>
+          <hr>
+          <p>Total waitlist count: ${currentCount}</p>
+        `,
+      });
+    } catch (emailError) {
+      console.error('Failed to send notification email:', emailError);
+      // Don't fail the signup if email fails
+    }
 
     return NextResponse.json({
       success: true,
