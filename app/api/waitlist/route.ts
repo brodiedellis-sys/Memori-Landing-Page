@@ -1,20 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import fs from 'fs';
-import path from 'path';
 
-// Simple file-based storage (you can replace this with a database later)
-const dataFile = path.join(process.cwd(), 'data', 'waitlist.json');
-
-// Ensure data directory exists
-const dataDir = path.dirname(dataFile);
-if (!fs.existsSync(dataDir)) {
-  fs.mkdirSync(dataDir, { recursive: true });
-}
-
-// Initialize file if it doesn't exist
-if (!fs.existsSync(dataFile)) {
-  fs.writeFileSync(dataFile, JSON.stringify({ emails: [], count: 42 }));
-}
+// Simple in-memory storage for demo (replace with database for production)
+// Note: This resets on each deployment - use a proper database for production
+let emailStore: { email: string; timestamp: string; ip?: string }[] = [];
+let currentCount = 42;
 
 export async function POST(request: NextRequest) {
   try {
@@ -28,11 +17,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Read current data
-    const data = JSON.parse(fs.readFileSync(dataFile, 'utf8'));
-
     // Check if email already exists
-    const emailExists = data.emails.some((entry: { email: string }) => entry.email === email);
+    const emailExists = emailStore.some((entry) => entry.email === email);
     if (emailExists) {
       return NextResponse.json(
         { error: 'Email already registered' },
@@ -40,24 +26,23 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Add new email
+    // Add new email to in-memory store
     const newEntry = {
       email,
       timestamp: new Date().toISOString(),
-      supporterNumber: data.count + 1,
       ip: request.headers.get('x-forwarded-for') || 'unknown'
     };
 
-    data.emails.push(newEntry);
-    data.count += 1;
+    emailStore.push(newEntry);
+    currentCount += 1;
 
-    // Save to file
-    fs.writeFileSync(dataFile, JSON.stringify(data, null, 2));
+    // Log for demo purposes (you can see this in Vercel function logs)
+    console.log(`New waitlist signup: ${email} (Total: ${currentCount})`);
 
     return NextResponse.json({
       success: true,
-      supporterNumber: newEntry.supporterNumber,
-      totalCount: data.count
+      supporterNumber: currentCount,
+      totalCount: currentCount
     });
 
   } catch (error) {
@@ -71,12 +56,10 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    const data = JSON.parse(fs.readFileSync(dataFile, 'utf8'));
-    
-    // Return only count for public access
+    // Return current count for public access
     return NextResponse.json({
-      count: data.count,
-      totalEmails: data.emails.length
+      count: currentCount,
+      totalEmails: emailStore.length
     });
   } catch {
     return NextResponse.json(
