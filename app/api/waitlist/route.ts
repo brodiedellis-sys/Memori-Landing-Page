@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     const data = JSON.parse(fs.readFileSync(dataFile, 'utf8'));
 
     // Check if email already exists
-    const emailExists = data.emails.some((entry: any) => entry.email === email);
+    const emailExists = data.emails.some((entry: { email: string }) => entry.email === email);
     if (emailExists) {
       return NextResponse.json(
         { error: 'Email already registered' },
@@ -78,7 +78,7 @@ export async function GET() {
       count: data.count,
       totalEmails: data.emails.length
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
       { error: 'Unable to fetch data' },
       { status: 500 }
