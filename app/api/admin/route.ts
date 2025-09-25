@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
-import { kv } from '@vercel/kv';
+import { createClient } from '@supabase/supabase-js';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+
+const supabase = createClient(
+  process.env.SUPABASE_URL || '',
+  process.env.SUPABASE_ANON_KEY || ''
+);
 
 // Simple admin endpoint to send updates to waitlist
 export async function POST(request: NextRequest) {
@@ -17,9 +22,20 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get all emails from KV storage
-    const waitlistEmails = await kv.get('waitlist_emails') || [];
-    const subscriberEmails = (waitlistEmails as any[]).map(entry => entry.email);
+    // Get all emails from Supabase
+    const { data: waitlistEmails, error } = await supabase
+      .from('waitlist')
+      .select('email');
+    
+    if (error) {
+      console.error('Error fetching emails:', error);
+      return NextResponse.json(
+        { error: 'Failed to fetch subscriber emails' },
+        { status: 500 }
+      );
+    }
+    
+    const subscriberEmails = waitlistEmails?.map(entry => entry.email) || [];
     
     // If no subscribers yet, send to admin for testing
     const emailsToSend = subscriberEmails.length > 0 ? subscriberEmails : ['contactmemoridev@gmail.com'];

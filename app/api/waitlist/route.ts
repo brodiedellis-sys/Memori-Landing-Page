@@ -1,31 +1,58 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Resend } from 'resend';
-import { kv } from '@vercel/kv';
+import { createClient } from '@supabase/supabase-js';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Helper functions for KV storage
+// Supabase client
+const supabase = createClient(
+  process.env.SUPABASE_URL || '',
+  process.env.SUPABASE_ANON_KEY || ''
+);
+
+// Helper functions for Supabase storage
 async function getWaitlistData() {
-  const emails = await kv.get('waitlist_emails') || [];
-  const count = await kv.get('waitlist_count') || 42;
-  return { emails, count };
+  const { data: emails, error } = await supabase
+    .from('waitlist')
+    .select('*')
+    .order('created_at', { ascending: true });
+  
+  if (error) {
+    console.error('Error fetching waitlist:', error);
+    return { emails: [], count: 42 };
+  }
+  
+  return { emails: emails || [], count: 42 + (emails?.length || 0) };
 }
 
 async function addToWaitlist(email: string, ip: string) {
-  const data = await getWaitlistData();
+  const { data, error } = await supabase
+    .from('waitlist')
+    .insert([
+      {
+        email,
+        ip_address: ip,
+        created_at: new Date().toISOString(),
+      }
+    ])
+    .select();
+
+  if (error) {
+    throw error;
+  }
+
+  const waitlistData = await getWaitlistData();
   const newEntry = {
     email,
     timestamp: new Date().toISOString(),
     ip
   };
   
-  const updatedEmails = [...(data.emails as any[]), newEntry];
-  const newCount = (data.count as number) + 1;
-  
-  await kv.set('waitlist_emails', updatedEmails);
-  await kv.set('waitlist_count', newCount);
-  
-  return { newEntry, newCount, totalEmails: updatedEmails.length };
+  return { 
+    newEntry, 
+    newCount: waitlistData.count, 
+    totalEmails: waitlistData.emails.length 
+  };
 }
 
 export async function POST(request: NextRequest) {
@@ -41,16 +68,19 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if email already exists
-    const data = await getWaitlistData();
-    const emailExists = (data.emails as any[]).some((entry: any) => entry.email === email);
-    if (emailExists) {
+    const { data: existingEmails } = await supabase
+      .from('waitlist')
+      .select('email')
+      .eq('email', email);
+    
+    if (existingEmails && existingEmails.length > 0) {
       return NextResponse.json(
         { error: 'Email already registered' },
         { status: 409 }
       );
     }
 
-    // Add new email to KV storage
+    // Add new email to Supabase
     const result = await addToWaitlist(email, request.headers.get('x-forwarded-for') || 'unknown');
 
     // Log for demo purposes (you can see this in Vercel function logs)
