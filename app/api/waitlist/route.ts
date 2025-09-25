@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 // Simple in-memory storage for demo (replace with database for production)
 // Note: This resets on each deployment - use a proper database for production
-let emailStore: { email: string; timestamp: string; ip?: string }[] = [];
+const emailStore: { email: string; timestamp: string; ip?: string }[] = [];
 let currentCount = 42;
 
 export async function POST(request: NextRequest) {
