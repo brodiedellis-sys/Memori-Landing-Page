@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
+import Image from 'next/image';
 // You will need to install react-pageflip: npm install react-pageflip
-// @ts-ignore
 import HTMLFlipBook from 'react-pageflip';
 
 // BookLogo is now just the logo image, used as the book cover
 const BookLogo = () => (
-  <img src="/logo.png" alt="Memori Logo" className="w-48 h-48 mb-8 mx-auto" />
+  <Image src="/logo.png" alt="Memori Logo" width={192} height={192} className="mb-8 mx-auto" />
 );
 
 interface IndexPageProps {
@@ -44,6 +44,7 @@ const Page: React.FC<PageProps> = ({ children }) => (
 export default function Book() {
   const [isOpened, setIsOpened] = useState(false);
   const [page, setPage] = useState(0);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const bookRef = React.useRef<any>(null);
 
   const handleOpenBook = () => {
@@ -76,6 +77,7 @@ export default function Book() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-darkSepia">
+      {/* @ts-expect-error - HTMLFlipBook props interface incomplete */}
       <HTMLFlipBook
         width={600}
         height={800}

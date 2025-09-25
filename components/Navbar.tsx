@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Navbar() {
   return (
@@ -56,7 +57,7 @@ export default function Navbar() {
               rel="noopener noreferrer"
               className="hover:scale-110 transition-transform"
             >
-              <img src="/Discord button.png" alt="Join Discord" className="w-16 h-16" />
+              <Image src="/Discord button.png" alt="Join Discord" width={64} height={64} />
             </a>
           </div>
 

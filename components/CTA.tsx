@@ -6,7 +6,6 @@ import { useState, useEffect } from "react";
 
 export default function CTA() {
   const [email, setEmail] = useState("");
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [count, setCount] = useState(42); // Starting count
   const [showNotification, setShowNotification] = useState(false);
