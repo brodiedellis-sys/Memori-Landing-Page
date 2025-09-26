@@ -27,13 +27,6 @@ export default function MobileNavPage() {
         </Link>
         
         <Link 
-          href="/about"
-          className="block text-center py-6 pixel-border bg-dark/50 hover:bg-mint/10 transition-colors text-2xl"
-        >
-          <span className="text-mint">{'>'}</span> ABOUT
-        </Link>
-        
-        <Link 
           href="/features"
           className="block text-center py-6 pixel-border bg-dark/50 hover:bg-mint/10 transition-colors text-2xl"
         >

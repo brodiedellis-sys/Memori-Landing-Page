@@ -15,12 +15,6 @@ export default function Navbar() {
               Home
             </Link>
             <Link 
-              href="/about" 
-              className="text-cream hover:text-gold transition-colors text-lg hover:text-glow"
-            >
-              About
-            </Link>
-            <Link 
               href="/features" 
               className="text-cream hover:text-gold transition-colors text-lg hover:text-glow"
             >
