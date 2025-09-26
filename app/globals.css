@@ -92,6 +92,11 @@
   html {
     @apply dark;
   }
+  
+  /* Fix mobile scroll position on load */
+  body {
+    overflow-x: hidden;
+  }
 }
 
 @keyframes blink-cursor {

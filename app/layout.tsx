@@ -21,6 +21,25 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              // Force scroll to top on page load
+              window.addEventListener('load', function() {
+                window.scrollTo(0, 0);
+                document.documentElement.scrollTop = 0;
+                document.body.scrollTop = 0;
+              });
+              
+              // Also do it immediately
+              window.scrollTo(0, 0);
+              document.documentElement.scrollTop = 0;
+              document.body.scrollTop = 0;
+            `,
+          }}
+        />
+      </head>
       <body
         className={`${vt323.variable} font-mono antialiased`}
       >
