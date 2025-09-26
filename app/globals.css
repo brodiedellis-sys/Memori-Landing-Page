@@ -74,11 +74,20 @@
   }
   body {
     @apply bg-darkSepia text-cream font-vt323;
-    /* Sepia starfield background */
+    /* Default: Desktop styling (keep exactly as before) */
     background-image: url('/background.png');
     background-repeat: repeat;
     background-size: cover;
     background-attachment: fixed;
+  }
+  
+  /* Mobile: Better background sizing and positioning */
+  @media (max-width: 767px) {
+    body {
+      background-size: auto 100vh;
+      background-attachment: scroll;
+      background-position: center top;
+    }
   }
   html {
     @apply dark;
@@ -205,6 +214,15 @@
   pointer-events: none;
   /* Subtle background animations */
   animation: subtle-drift 180s ease-in-out infinite, star-twinkle 4s ease-in-out infinite;
+}
+
+/* Mobile optimization for starfield */
+@media (max-width: 767px) {
+  .starfield-background {
+    background-size: cover;
+    background-position: center center;
+    position: absolute;
+  }
 }
 
 /* Subtle cloud drift animation */
