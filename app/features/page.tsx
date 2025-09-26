@@ -16,12 +16,12 @@ export default function FeaturesPage() {
             </p>
           </div>
 
-          {/* Habit Tracker Section */}
+          {/* Evolving Personality Section */}
           <Card className="bg-darkSepia border border-cream mb-12 p-8 font-vt323" style={{borderRadius: '0', borderStyle: 'dashed'}}>
-            <h2 className="text-4xl text-gold mb-6">[ HABIT TRACKER ]</h2>
+            <h2 className="text-4xl text-gold mb-6">[ EVOLVING PERSONALITY ]</h2>
             <div className="space-y-4 text-lg">
               <p className="text-cream">
-                Stay consistent with daily reflection through simple, built-in habit tracking.
+                The more you write, the more Memori adapts — becoming a companion that reflects your journey.
               </p>
             </div>
           </Card>
@@ -46,12 +46,12 @@ export default function FeaturesPage() {
             </div>
           </Card>
 
-          {/* Evolving Personality Section */}
+          {/* Habit Tracker Section */}
           <Card className="bg-darkSepia border border-cream mb-12 p-8 font-vt323" style={{borderRadius: '0', borderStyle: 'dashed'}}>
-            <h2 className="text-4xl text-gold mb-6">[ EVOLVING PERSONALITY ]</h2>
+            <h2 className="text-4xl text-gold mb-6">[ HABIT TRACKER ]</h2>
             <div className="space-y-4 text-lg">
               <p className="text-cream">
-                The more you write, the more Memori adapts — becoming a companion that reflects your journey.
+                Stay consistent with daily reflection through simple, built-in habit tracking.
               </p>
             </div>
           </Card>
