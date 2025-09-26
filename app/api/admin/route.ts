@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
 
     try {
       await resend.emails.send({
-        from: 'Memori Updates <noreply@updates.memori.com>',
+        from: 'Memori Updates <onboarding@resend.dev>',
         to: emailsToSend,
         subject: subject || 'Memori Update',
         html: `

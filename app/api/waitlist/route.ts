@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
     // Send welcome email to new subscriber
     try {
       await resend.emails.send({
-        from: 'Memori <noreply@updates.memori.com>',
+        from: 'Memori <onboarding@resend.dev>',
         to: [email],
         subject: '🎉 Welcome to the Memori Waitlist!',
         html: `
@@ -135,7 +135,7 @@ export async function POST(request: NextRequest) {
     // Send notification email to you about new signup
     try {
       await resend.emails.send({
-        from: 'Memori Waitlist <noreply@updates.memori.com>',
+        from: 'Memori Waitlist <onboarding@resend.dev>',
         to: [process.env.FROM_EMAIL || 'contactmemoridev@gmail.com'],
         subject: `New Memori Waitlist Signup #${result.newCount}`,
         html: `
